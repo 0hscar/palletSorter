@@ -1,6 +1,7 @@
 # palletSorter
 
 Sorting your things on a pallet.
+Old Python school project remade in Go + continuation.
 
 ### Future features
 
