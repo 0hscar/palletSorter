@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+    <head>
+        <title>3D Pallet Viewer</title>
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden;
+            }
+            #info {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                color: white;
+                background: rgba(0, 0, 0, 0.7);
+                padding: 10px;
+                font-family: Arial, sans-serif;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="info">
+            Left click + drag to rotate<br />
+            Right click + drag to pan<br />
+            Scroll to zoom
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js"></script>
+        <script src="/static/viewer.js"></script>
+    </body>
+</html>

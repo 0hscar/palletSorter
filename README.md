@@ -5,6 +5,10 @@ Old Python school project remade in Go + continuation.
 
 ### Future features
 
-- User interface
-- 3D Sorting
-- Rework to leave middle empty if possible for best structural integrity (Configurable ?)
+- User interface --> Configure amount, sizes etc etc in browser
+- 3D Sorting --> DONE
+- How it's filled parameters
+
+### Build:
+
+go build -o palletviewer ./cmd
