@@ -1,4 +1,4 @@
-# palletSorter
+# Pallet Sorter
 
 Sorting your things on a pallet.
 Old Python school project remade in Go + continuation.
