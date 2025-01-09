@@ -12,7 +12,7 @@ Old Python school project remade in Go + continuation.
 ### Usage
 
 Currently:
-In ```palletSorter/cmd/main.go```. Configure 'cubes' and the variables ```width, height, depth``` according to your needs.
+In ```palletSorter/cmd/main.go```. Configure ```cubes``` and the variables ```width, height, depth``` according to your needs.
 
 Future:
 All settings changeable while running in the browser.
