@@ -23,4 +23,4 @@ All settings changeable while running in the browser.
 
 ### Build:
 
-```go build ./cmd```
+```go build -o <chooseName>.exe ./cmd```
