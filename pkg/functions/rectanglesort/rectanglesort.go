@@ -12,6 +12,9 @@ import (
 
 func SortRectangles(rectangles []types.Rectangle) {
 	sort.Slice(rectangles, func(i, j int) bool {
-		return rectangles[i].Height > rectangles[j].Width
+		if rectangles[i].Height == rectangles[j].Height {
+			return rectangles[i].Width > rectangles[j].Width
+		}
+		return rectangles[i].Height > rectangles[j].Height
 	})
 }
