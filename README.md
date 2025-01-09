@@ -9,6 +9,18 @@ Old Python school project remade in Go + continuation.
 - 3D Sorting --> DONE
 - How it's filled parameters
 
+### Usage
+
+Currently:
+In ´palletSorter/cmd/main.go´. Configure 'cubes' and the variables 'width, height, depth' according to your needs.
+
+Future:
+All settings changeable while running in the browser.
+
+### Run dev
+
+```go run cmd/main.go```
+
 ### Build:
 
-go build -o palletviewer ./cmd
+```go build -o palletviewer ./cmd```

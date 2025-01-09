@@ -14,15 +14,18 @@ import (
 )
 
 func main() {
+	// Modify how many cubes and their sizes. TODO: Configurable at runtime
 	cubes := []types.Cube{
 		{Width: 2, Height: 3, Depth: 2},
 		{Width: 1, Height: 2, Depth: 3},
 		{Width: 2, Height: 2, Depth: 2},
 		{Width: 3, Height: 1, Depth: 1},
 	}
+
+	// Pallet size. TODO: Configurable at runtime
 	width := 6
 	height := 4
-	depth := 4
+	depth := 4 // z axis, height from the ground
 
 	// rectangles := []types.Rectangle{
 	// 	{Width: 3, Height: 2},
