@@ -10,9 +10,9 @@ Old Python school project remade in Go + continuation.
 
 ## Usage
 
-Currently: __
-In ´palletSorter/cmd/main.go´. Configure 'cubes' and the variables 'width, height, depth' according to your needs. __
-Can add cubes with POST requests. Example: __
+Currently: <br/>
+In ´palletSorter/cmd/main.go´. Configure 'cubes' and the variables 'width, height, depth' according to your needs. <br/>
+Can add cubes with POST requests. Example: <br/>
 ```curl -X POST -H "Content-Type: application/json" -d '{width":1,"height":1,"depth":1}' http://localhost:8080/api/cubes/add```
 
 Future:
