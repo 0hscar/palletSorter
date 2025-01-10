@@ -8,7 +8,6 @@ function updateScene(data) {
   cubes = [];
 
   data.cubes.forEach((cubeData, index) => {
-    console.log(cubeData);
     const geometry = new THREE.BoxGeometry(
       cubeData.Width || 1,
       cubeData.Height || 1,
@@ -57,7 +56,7 @@ function createContainerOutline(data) {
   const edges = new THREE.EdgesGeometry(containerGeometry);
   containerOutline = new THREE.LineSegments(
     edges,
-    new THREE.LineBasicMaterial({ color: 0xffffff }),
+    new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 }),
   );
   containerOutline.position.set(
     data.Width / 2,
@@ -129,7 +128,6 @@ async function init() {
       throw new Error("Failed to fetch data");
     }
     const data = await response.json();
-    console.log("YEEET");
 
     //Container outline
     createContainerOutline(data);

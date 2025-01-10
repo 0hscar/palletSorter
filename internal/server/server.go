@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"mime"
 	"net/http"
+	"palletSorter/pkg/palletarrangements/find3darrangements"
 	"palletSorter/pkg/types"
 	"path/filepath"
 	"sync"
@@ -19,10 +20,33 @@ type ViewerData struct {
 	mu     sync.RWMutex // Add mutex for thread-safe operations
 }
 
-func (vd *ViewerData) AddCube(cube types.PlacedCube) {
+func (vd *ViewerData) AddCube(cube types.Cube) error {
 	vd.mu.Lock()
 	defer vd.mu.Unlock()
-	vd.Cubes = append(vd.Cubes, cube)
+
+	tempCubes := make([]types.Cube, len(vd.Cubes))
+
+	for i, placedCube := range vd.Cubes {
+		tempCubes[i] = types.Cube{
+			Width:  placedCube.Width,
+			Height: placedCube.Height,
+			Depth:  placedCube.Depth,
+		}
+	}
+
+	newCubes := append(tempCubes, cube)
+	newResult := find3darrangements.Find3DArrangements(newCubes, vd.Width, vd.Height, vd.Depth)
+
+	if len(newResult) == 0 {
+		return fmt.Errorf("unable to fit new cube in container")
+	}
+
+	vd.Cubes = make([]types.PlacedCube, len(newResult))
+	for i, resultCube := range newResult {
+		vd.Cubes[i] = resultCube
+	}
+	return nil
+	// vd.Cubes = append(vd.Cubes, cube)
 }
 
 func (vd *ViewerData) GetCubes() []types.PlacedCube {
@@ -100,17 +124,16 @@ func StartViewer(data *ViewerData, port string) error {
 			return
 		}
 
-		var newCube types.PlacedCube
+		var newCube types.Cube
 		if err := json.NewDecoder(r.Body).Decode(&newCube); err != nil {
 			http.Error(w, fmt.Sprintf("Invalid request body: %v", err), http.StatusBadRequest)
 			return
 		}
 
-		if newCube.X >= data.Width || newCube.Y >= data.Height || newCube.Z >= data.Depth {
-			http.Error(w, "Cube position out of bounds", http.StatusBadRequest)
+		if err := data.AddCube(newCube); err != nil {
+			http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+			return
 		}
-
-		data.AddCube(newCube)
 		w.WriteHeader(http.StatusCreated)
 
 	})
