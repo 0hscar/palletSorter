@@ -1,7 +1,7 @@
 # Pallet Sorter
 
 Sorting your things on a pallet.
-Old Python school project remade in Go + continuation.
+Old Python school project remade and continued with Go.
 
 ## Planned new features
 
