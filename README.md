@@ -28,7 +28,7 @@ All settings changeable while running in the browser.
 
 ## Run
 
-In windows, run the .exe file
+In windows, run the .exe file. <br/>
 in linux: ```./<filename>.exe```
 
 ## Changelog
