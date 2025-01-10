@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 	"palletSorter/internal/server"
-	"palletSorter/pkg/palletarrangements/find3darrangements"
 
+	"palletSorter/pkg/palletarrangements/find3darrangements"
 	// "palletSorter/pkg/palletarrangements/findarrangements"
 	// "palletSorter/pkg/palletarrangements/printarrangements"
 	"palletSorter/pkg/palletarrangements/save3darrangements"
@@ -20,12 +20,16 @@ func main() {
 		{Width: 1, Height: 2, Depth: 3},
 		{Width: 2, Height: 2, Depth: 2},
 		{Width: 3, Height: 1, Depth: 1},
+		{Width: 4, Height: 2, Depth: 6},
+		{Width: 6, Height: 7, Depth: 3},
+		{Width: 2, Height: 5, Depth: 8},
+		{Width: 1, Height: 3, Depth: 2},
 	}
 
 	// Pallet size. TODO: Configurable at runtime
-	width := 6
-	height := 4
-	depth := 4 // z axis, height from the ground
+	width := 10
+	height := 10
+	depth := 10 // z axis, height from the ground
 
 	// rectangles := []types.Rectangle{
 	// 	{Width: 3, Height: 2},
@@ -73,7 +77,7 @@ func main() {
 	}
 	fmt.Println("3D visualization saved as 3d_arrangement.png")
 
-	viewerData := server.ViewerData{
+	viewerData := &server.ViewerData{
 		Cubes:  result3d,
 		Width:  width,
 		Height: height,

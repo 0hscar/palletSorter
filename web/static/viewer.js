@@ -1,5 +1,92 @@
 let scene, camera, renderer, controls;
 let cubes = [];
+let containerOutline;
+
+// Update scene function
+function updateScene(data) {
+  cubes.forEach((cube) => scene.remove(cube));
+  cubes = [];
+
+  data.cubes.forEach((cubeData, index) => {
+    console.log(cubeData);
+    const geometry = new THREE.BoxGeometry(
+      cubeData.Width || 1,
+      cubeData.Height || 1,
+      cubeData.Depth || 1,
+    );
+    const material = new THREE.MeshPhongMaterial({
+      color: new THREE.Color().setHSL(index * 0.1, 0.7, 0.5),
+      transparent: true,
+      opacity: 0.8,
+    });
+    const cube = new THREE.Mesh(geometry, material);
+
+    cube.position.set(
+      cubeData.X + (cubeData.Width || 1) / 2,
+      cubeData.Y + (cubeData.Height || 1) / 2,
+      cubeData.Z + (cubeData.Depth || 1) / 2,
+    );
+
+    scene.add(cube);
+    cubes.push(cube);
+  });
+}
+
+// Update cubes function
+function updateCubes() {
+  fetch("/api/cubes")
+    .then((response) => response.json())
+    .then((data) => {
+      updateScene(data);
+    })
+    .catch((error) => console.error("Error fetching cubes: ", error));
+}
+
+// container outline function
+function createContainerOutline(data) {
+  if (containerOutline) {
+    scene.remove(containerOutline);
+  }
+
+  const containerGeometry = new THREE.BoxGeometry(
+    data.Width,
+    data.Height,
+    data.Depth,
+  );
+
+  const edges = new THREE.EdgesGeometry(containerGeometry);
+  containerOutline = new THREE.LineSegments(
+    edges,
+    new THREE.LineBasicMaterial({ color: 0xffffff }),
+  );
+  containerOutline.position.set(
+    data.Width / 2,
+    data.Height / 2,
+    data.Depth / 2,
+  );
+  scene.add(containerOutline);
+}
+
+// GUI
+function setupGUI() {
+  const gui = new dat.GUI();
+  const params = {
+    opacity: 0.8,
+    wireframe: false,
+  };
+
+  gui.add(params, "opacity", 0, 1).onChange((value) => {
+    cubes.forEach((cube) => {
+      cube.material.opacity = value;
+    });
+  });
+
+  gui.add(params, "wireframe").onChange((value) => {
+    cubes.forEach((cube) => {
+      cube.material.wireframe = value;
+    });
+  });
+}
 
 async function init() {
   // Scene
@@ -32,80 +119,29 @@ async function init() {
   directionalLight.position.set(10, 20, 10);
   scene.add(directionalLight);
 
-  console.log("YEEET");
   // Grid helper
   const gridHelper = new THREE.GridHelper(20, 20);
   scene.add(gridHelper);
 
   try {
-    // Load and display data
     const response = await fetch("/api/cubes");
     if (!response.ok) {
       throw new Error("Failed to fetch data");
     }
     const data = await response.json();
+    console.log("YEEET");
 
-    // Container outline
-    const containerGeometry = new THREE.BoxGeometry(
-      data.Width,
-      data.Height,
-      data.Depth,
-    );
-    const edges = new THREE.EdgesGeometry(containerGeometry);
-    const containerOutline = new THREE.LineSegments(
-      edges,
-      new THREE.LineBasicMaterial({ color: 0xffffff }),
-    );
-    containerOutline.position.set(
-      data.Width / 2,
-      data.Height / 2,
-      data.Depth / 2,
-    );
-    scene.add(containerOutline);
+    //Container outline
+    createContainerOutline(data);
 
-    // Cubes
-    data.Cubes.forEach((cubeData, index) => {
-      const geometry = new THREE.BoxGeometry(
-        cubeData.Width,
-        cubeData.Height,
-        cubeData.Depth,
-      );
-      const material = new THREE.MeshPhongMaterial({
-        color: new THREE.Color().setHSL(index * 0.1, 0.7, 0.5),
-        transparent: true,
-        opacity: 0.8,
-      });
-      const cube = new THREE.Mesh(geometry, material);
+    // Initial cubes
+    updateScene(data);
 
-      // Position cube
-      cube.position.set(
-        cubeData.X + cubeData.Width / 2,
-        cubeData.Y + cubeData.Height / 2,
-        cubeData.Z + cubeData.Depth / 2,
-      );
+    // GUI
+    setupGUI();
 
-      scene.add(cube);
-      cubes.push(cube);
-    });
-
-    // GUI controls
-    const gui = new dat.GUI();
-    const params = {
-      opacity: 0.8,
-      wireframe: false,
-    };
-
-    gui.add(params, "opacity", 0, 1).onChange((value) => {
-      cubes.forEach((cube) => {
-        cube.material.opacity = value;
-      });
-    });
-
-    gui.add(params, "wireframe").onChange((value) => {
-      cubes.forEach((cube) => {
-        cube.material.wireframe = value;
-      });
-    });
+    // Periodic updates
+    setInterval(updateCubes, 1000);
   } catch (error) {
     console.error("Error loading data:", error);
     document.body.innerHTML = `<div style="color: white; padding: 20px;">Error loading data: ${error.message}</div>`;

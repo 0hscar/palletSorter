@@ -4,6 +4,9 @@
 *.so
 *.dylib
 pallet-viewer
+palletviewer
+
+ver0.1.0-PREVIEW
 
 # Test binary, built with `go test -c`
 *.test

@@ -7,10 +7,11 @@ type Cube struct {
 }
 
 type PlacedCube struct {
-	X      int
-	Y      int
-	Z      int
-	Width  int
-	Height int
-	Depth  int
+	X      int `json:"X"`
+	Y      int `json:"Y"`
+	Z      int `json:"Z"`
+	Width  int `json:"Width"`
+	Height int `json:"Height"`
+	Depth  int `json:"Depth"`
+	// Color  string `json:"Color"`
 }
