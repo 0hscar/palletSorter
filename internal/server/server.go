@@ -37,6 +37,7 @@ func setupRoutes(data *ViewerData) {
 	http.HandleFunc("/", handleIndex)
 	http.HandleFunc("/api/cubes", handleGetCubes(data))
 	http.HandleFunc("/api/cubes/add", handleAddCube(data))
+	http.HandleFunc("/api/container/resize", handleUpdateContainerSize(data))
 }
 
 // type ViewerData struct {

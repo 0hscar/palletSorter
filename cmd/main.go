@@ -5,11 +5,11 @@ import (
 	"log"
 	"palletSorter/internal/server"
 
-	"palletSorter/pkg/palletarrangements/find3darrangements"
 	// "palletSorter/pkg/palletarrangements/findarrangements"
 	// "palletSorter/pkg/palletarrangements/printarrangements"
-	"palletSorter/pkg/palletarrangements/save3darrangements"
+
 	// "palletSorter/pkg/palletarrangements/savearrangements"
+	"palletSorter/pkg/palletarrangements/find3darrangements"
 	"palletSorter/pkg/types"
 )
 
@@ -70,12 +70,12 @@ func main() {
 			i+1, cube.X, cube.Y, cube.Z, cube.Width, cube.Height, cube.Depth)
 	}
 
-	err3d := save3darrangements.Save3DArrangementImage(result3d, width, height, depth, "3d_arrangement.png")
-	if err3d != nil {
-		fmt.Println("Error saving 3D visualization:", err3d)
-		return
-	}
-	fmt.Println("3D visualization saved as 3d_arrangement.png")
+	// err3d := save3darrangements.Save3DArrangementImage(result3d, width, height, depth, "3d_arrangement.png")
+	// if err3d != nil {
+	// 	fmt.Println("Error saving 3D visualization:", err3d)
+	// 	return
+	// }
+	// fmt.Println("3D visualization saved as 3d_arrangement.png")
 
 	viewerData := &server.ViewerData{
 		Cubes:  result3d,

@@ -35,9 +35,9 @@ func handleGetCubes(data *ViewerData) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		response := struct {
 			Cubes  []types.PlacedCube `json:"cubes"`
-			Width  int                `json:"width"`
-			Height int                `json:"height"`
-			Depth  int                `json:"depth"`
+			Width  int                `json:"Width"`
+			Height int                `json:"Height"`
+			Depth  int                `json:"Depth"`
 		}{
 			Cubes:  data.GetCubes(),
 			Width:  data.Width,
@@ -71,5 +71,27 @@ func handleAddCube(data *ViewerData) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusCreated)
 
+	}
+}
+
+func handleUpdateContainerSize(data *ViewerData) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		var newSize types.ContainerSize
+		if err := json.NewDecoder(r.Body).Decode(&newSize); err != nil {
+			http.Error(w, fmt.Sprintf("Invalid request body: %v", err), http.StatusBadRequest)
+			return
+		}
+
+		if err := data.UpdateContainerSize(newSize.Width, newSize.Height, newSize.Depth); err != nil {
+			http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
 	}
 }

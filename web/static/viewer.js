@@ -1,11 +1,13 @@
 let scene, camera, renderer, controls;
 let cubes = [];
+let gridHelper;
 let containerOutline;
 
 // Update scene function
 function updateScene(data) {
   cubes.forEach((cube) => scene.remove(cube));
   cubes = [];
+  scene.remove(gridHelper);
 
   data.cubes.forEach((cubeData, index) => {
     const geometry = new THREE.BoxGeometry(
@@ -20,12 +22,15 @@ function updateScene(data) {
     });
     const cube = new THREE.Mesh(geometry, material);
 
+    gridHelper = new THREE.GridHelper(data.Width, data.Height); // Make it update at container size change
+    // gridHelper.position.set(data.Width / 2, data.Height / 2, 0);
+
     cube.position.set(
       cubeData.X + (cubeData.Width || 1) / 2,
       cubeData.Y + (cubeData.Height || 1) / 2,
       cubeData.Z + (cubeData.Depth || 1) / 2,
     );
-
+    scene.add(gridHelper);
     scene.add(cube);
     cubes.push(cube);
   });
@@ -67,11 +72,46 @@ function createContainerOutline(data) {
 }
 
 // GUI
-function setupGUI() {
+function setupGUI(data) {
   const gui = new dat.GUI();
+  console.log("Data: ", data);
+  console.log("Data properties:", {
+    width: data.Width,
+    height: data.Height,
+    depth: data.Depth,
+    hasWidth: "Width" in data,
+    hasHeight: "Height" in data,
+    hasDepth: "Depth" in data,
+  });
   const params = {
     opacity: 0.8,
     wireframe: false,
+    containerWidth: data.Width,
+    containerHeight: data.Height,
+    containerDepth: data.Depth,
+    updateContainer: async function () {
+      try {
+        const response = await fetch("/api/container/resize", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            width: params.containerWidth,
+            heigth: params.containerHeight,
+            depth: params.containerDepth,
+          }),
+        });
+        if (!response.ok) {
+          const error = await response.text();
+          console.error("Failed to resize container:", error);
+          return;
+        }
+        updateCubes();
+      } catch (error) {
+        console.error("Error updating container size:", error);
+      }
+    },
   };
 
   gui.add(params, "opacity", 0, 1).onChange((value) => {
@@ -85,6 +125,12 @@ function setupGUI() {
       cube.material.wireframe = value;
     });
   });
+
+  // const containerFolder = gui.addFolder("Container size");
+  gui.add(params, "containerWidth", 1, 50).name("Width");
+  gui.add(params, "containerHeight", 1, 50).name("Height");
+  gui.add(params, "containerDepth", 1, 50).name("Depth");
+  gui.add(params, "updateContainer").name("Update Size");
 }
 
 async function init() {
@@ -119,8 +165,12 @@ async function init() {
   scene.add(directionalLight);
 
   // Grid helper
-  const gridHelper = new THREE.GridHelper(20, 20);
-  scene.add(gridHelper);
+  // const gridHelper = new THREE.GridHelper(
+  //   containerGeometry.Width + 5,
+  //   containerGeometry.Height + 5,
+  // );
+
+  // scene.add(gridHelper);
 
   try {
     const response = await fetch("/api/cubes");
@@ -129,6 +179,10 @@ async function init() {
     }
     const data = await response.json();
 
+    // let gridHelper = new THREE.GridHelper(data.Width, data.Height);
+    // // gridHelper.position.set(data.Width / 2, data.Height / 2, 0);
+
+    // scene.add(gridHelper);
     //Container outline
     createContainerOutline(data);
 
@@ -136,7 +190,7 @@ async function init() {
     updateScene(data);
 
     // GUI
-    setupGUI();
+    setupGUI(data);
 
     // Periodic updates
     setInterval(updateCubes, 1000);
@@ -144,7 +198,6 @@ async function init() {
     console.error("Error loading data:", error);
     document.body.innerHTML = `<div style="color: white; padding: 20px;">Error loading data: ${error.message}</div>`;
   }
-
   animate();
 }
 
