@@ -24,8 +24,12 @@ All settings changeable while running in the browser.
 
 ## Build:
 
-```go build -o palletviewer ./cmd```
+```go build -o palletviewer.exe ./cmd```
 
+## Run
+
+In windows, run the .exe file
+in linux: ```./<filename>.exe```
 
 ## Changelog
 
