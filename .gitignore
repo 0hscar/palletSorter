@@ -34,6 +34,7 @@ vendor/
 # Generated files
 arrangement.png
 3d_arrangement.png
+*.png
 
 # Temporary files
 tmp/
