@@ -25,6 +25,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Test
 func handleGetCubes(data *ViewerData) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
